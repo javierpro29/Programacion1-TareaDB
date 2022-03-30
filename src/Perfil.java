@@ -10,6 +10,7 @@ import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 public class Perfil extends JPanel {
 	private JTable table;
@@ -56,7 +57,15 @@ public class Perfil extends JPanel {
 		modelo.addColumn("Dirrección");
 		modelo.addColumn("Cargo");
 		
+		TableColumnModel columnModel = table.getColumnModel();
+
+	    columnModel.getColumn(0).setPreferredWidth(1);
+	    columnModel.getColumn(1).setPreferredWidth(100);
+	    columnModel.getColumn(2).setPreferredWidth(1);
+	    columnModel.getColumn(3).setPreferredWidth(1);
+	    columnModel.getColumn(4).setPreferredWidth(1);
 		
+	    
 		scrollPane.setViewportView(table);
 			
 		
