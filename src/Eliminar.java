@@ -5,34 +5,38 @@ import java.awt.SystemColor;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.awt.event.ActionEvent;
 
 public class Eliminar extends JPanel {
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField txtCargo;
+	private JTextField txtDireccion;
+	private JTextField txtNombre;
+	private JTextField txtId;
 
-	/**
-	 * Create the panel.
-	 */
+	Connection conexion = null;
+	PreparedStatement preparedStatement = null;
+	ResultSet resultSet = null;
+	private JLabel lblHorario;
+	private JComboBox CBHorario;
+	
 	public Eliminar() {
 		setBackground(Color.DARK_GRAY);
 		setSize(791, 681);
 		setLayout(null);
 		
-		JButton btnActualizar = new JButton("Actualizar");
-		btnActualizar.setForeground(Color.BLACK);
-		btnActualizar.setFont(new Font("Tahoma", Font.BOLD, 18));
-		btnActualizar.setBackground(SystemColor.textHighlight);
-		btnActualizar.setBounds(295, 630, 166, 40);
-		add(btnActualizar);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(133, 563, 274, 40);
-		add(textField);
+		txtCargo = new JTextField();
+		txtCargo.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		txtCargo.setColumns(10);
+		txtCargo.setBounds(133, 563, 274, 40);
+		add(txtCargo);
 		
 		JLabel lblCargo = new JLabel("Cargo:");
 		lblCargo.setForeground(SystemColor.textHighlight);
@@ -46,26 +50,29 @@ public class Eliminar extends JPanel {
 		lblDireccion.setBounds(51, 479, 140, 46);
 		add(lblDireccion);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(159, 485, 248, 40);
-		add(textField_1);
+		txtDireccion = new JTextField();
+		txtDireccion.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		txtDireccion.setColumns(10);
+		txtDireccion.setBounds(159, 485, 248, 40);
+		add(txtDireccion);
 		
-		JComboBox CBHorario = new JComboBox();
+		CBHorario = new JComboBox();
+		CBHorario.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		CBHorario.setEditable(true);
 		CBHorario.setBounds(133, 402, 241, 40);
 		add(CBHorario);
 		
-		JLabel lblHorario = new JLabel("Horario:");
+		lblHorario = new JLabel("Horario:");
 		lblHorario.setForeground(SystemColor.textHighlight);
 		lblHorario.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblHorario.setBounds(51, 402, 104, 46);
 		add(lblHorario);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(237, 315, 495, 40);
-		add(textField_2);
+		txtNombre = new JTextField();
+		txtNombre.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		txtNombre.setColumns(10);
+		txtNombre.setBounds(237, 315, 495, 40);
+		add(txtNombre);
 		
 		JLabel lblNombre = new JLabel("Nombre del evento:");
 		lblNombre.setForeground(SystemColor.textHighlight);
@@ -79,12 +86,46 @@ public class Eliminar extends JPanel {
 		lblId.setBounds(51, 227, 106, 46);
 		add(lblId);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(117, 233, 250, 40);
-		add(textField_3);
+		txtId = new JTextField();
+		txtId.setColumns(10);
+		txtId.setBounds(117, 233, 250, 40);
+		add(txtId);
 		
 		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String id = txtId.getText();
+				
+				conexion = Conexion.conectar();
+				
+				try {
+					preparedStatement = conexion.prepareStatement("select * from evento where id = ?");
+					
+					preparedStatement.setString(1, id);
+					
+					resultSet = preparedStatement.executeQuery();
+					
+					while(resultSet.next()) {
+						   for (int x=1;x<=resultSet.getMetaData().getColumnCount();x++)
+						     System.out.print(resultSet.getString(x)+ "\t");
+						   
+						   System.out.println(""); 
+					
+						   txtNombre.setText(resultSet.getString("nombre"));
+						   CBHorario.addItem(resultSet.getString("Horario"));
+						   txtDireccion.setText(resultSet.getString("direccion"));
+						   txtCargo.setText(resultSet.getString("cargo"));
+						}
+						
+					
+						
+					}catch(Exception i) {
+						System.out.println(i);
+						
+					}
+					
+				}
+		});
 		btnBuscar.setForeground(Color.BLACK);
 		btnBuscar.setFont(new Font("Tahoma", Font.BOLD, 18));
 		btnBuscar.setBackground(SystemColor.textHighlight);
@@ -104,6 +145,56 @@ public class Eliminar extends JPanel {
 		lblEliminarUnRegistro.setBackground(SystemColor.textHighlight);
 		lblEliminarUnRegistro.setBounds(0, 32, 790, 72);
 		add(lblEliminarUnRegistro);
+		
+		
+
+		JButton btnActualizar = new JButton("Eliminar");
+		btnActualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String Id = txtId.getText();
+				
+				
+				conexion = Conexion.conectar();
+				
+				try {
+					
+					preparedStatement = conexion
+							.prepareStatement("delete from evento where id = ?");
+					
+					preparedStatement.setString(1, Id);
+					
+					int resultado = preparedStatement.executeUpdate();
+					if(resultado > 0) {
+						JOptionPane.showMessageDialog(null, "Evento Eliminado correctamente");
+						clear();
+						conexion.close();
+					}else{
+						JOptionPane.showMessageDialog(null, "Error: el evento no se ha podido eliminar correctamente. Revise los datos");
+					}
+					
+					
+				}catch(Exception i){
+					System.out.println(i);
+				}
+				
+				
+			}
+		});
+		btnActualizar.setForeground(Color.BLACK);
+		btnActualizar.setFont(new Font("Tahoma", Font.BOLD, 18));
+		btnActualizar.setBackground(SystemColor.textHighlight);
+		btnActualizar.setBounds(295, 630, 166, 40);
+		add(btnActualizar);
+		
+		
+	}
+	
+	private void clear() {
+		txtNombre.setText(null);
+		txtDireccion.setText(null);
+		txtCargo.setText(null);
+		CBHorario.setSelectedIndex(0);
 	}
 
 }

@@ -26,6 +26,7 @@ public class Agregar extends JPanel {
 	Connection conexion = null;
 	PreparedStatement preparedStatement = null;
 	ResultSet resultSet = null;
+	private JComboBox CBHorario;
 	
 	
 	
@@ -56,7 +57,7 @@ public class Agregar extends JPanel {
 		add(lblNombre);
 		
 		txtNombre = new JTextField();
-		txtNombre.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtNombre.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		txtNombre.setColumns(10);
 		txtNombre.setBounds(214, 220, 495, 40);
 		add(txtNombre);
@@ -74,7 +75,7 @@ public class Agregar extends JPanel {
 		add(lblDireccion);
 		
 		txtDireccion = new JTextField();
-		txtDireccion.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtDireccion.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		txtDireccion.setColumns(10);
 		txtDireccion.setBounds(136, 384, 573, 40);
 		add(txtDireccion);
@@ -86,17 +87,17 @@ public class Agregar extends JPanel {
 		add(lblCargo);
 		
 		txtCargo = new JTextField();
-		txtCargo.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtCargo.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		txtCargo.setColumns(10);
-		txtCargo.setBounds(110, 462, 274, 40);
+		txtCargo.setBounds(110, 460, 274, 40);
 		add(txtCargo);
 		
 		
 		
-		JComboBox CBHorario = new JComboBox();
-		CBHorario.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		CBHorario = new JComboBox();
+		CBHorario.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		CBHorario.setBounds(110, 307, 241, 40);
-		CBHorario.addItem("Horario");
+		CBHorario.addItem("Elegir");
 		CBHorario.addItem("Matutino");
 		CBHorario.addItem("Vespertino");
 		CBHorario.addItem("Nocturno");
@@ -108,7 +109,7 @@ public class Agregar extends JPanel {
 				
 				String nombre = txtNombre.getText();
 				String horario = (String) CBHorario.getSelectedItem();
-				if(horario == "Horario") {
+				if(horario == "Elegir") {
 					horario = "null";
 				}
 				String direccion = txtDireccion.getText();
@@ -156,6 +157,7 @@ public class Agregar extends JPanel {
 		txtNombre.setText(null);
 		txtDireccion.setText(null);
 		txtCargo.setText(null);
+		CBHorario.setSelectedIndex(0);
 	}
 	
 }
